@@ -9,7 +9,6 @@ import {
   getJoinFailedAuthRoomId,
   getPendingJoinCommandId
 } from '../../state/commandTracking/commandTrackingSelectors';
-import GithubRibbon from './GithubRibbon';
 
 import {
   StyledEyecatcher,
@@ -36,7 +35,6 @@ const RoomProtected = ({roomId, pendingJoinCommandId, joinRoom}) => {
 
   return (
     <StyledLanding>
-      <GithubRibbon />
       <StyledLandingInner>
         <StyledEyecatcher>
           <StyledInfoText>

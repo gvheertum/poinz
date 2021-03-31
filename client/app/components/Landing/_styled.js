@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import backgroundImage from '../../assets/landing_bg_z2020_lightblue.jpg';
 import {COLOR_FONT_GREY, COLOR_ORANGE} from '../colors';
 import {device} from '../dimensions';
 
@@ -12,7 +11,7 @@ export const StyledLanding = styled.div`
   top: 0;
   left: 0;
   position: fixed !important;
-  background: url(${backgroundImage}) no-repeat center center fixed;
+  background: url(https://source.unsplash.com/random) no-repeat center center fixed;
   background-size: cover;
 `;
 
@@ -102,10 +101,6 @@ export const StyledEyecatcher = styled.div`
 
   input {
     color: ${COLOR_FONT_GREY};
-  }
-
-  &.disclaimer-text {
-    font-size: 13px;
   }
 `;
 

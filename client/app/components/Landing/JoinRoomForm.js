@@ -25,7 +25,7 @@ import {
  */
 const JoinRoomForm = ({presetUsername, joinRoom}) => {
   const {t} = useContext(L10nContext);
-  const [showExtended, setShowExtended] = useState(false);
+  const [showExtended, setShowExtended] = useState(true);
   const [customRoomId, setCustomRoomId] = useState('');
   const [customRoomPassword, setCustomRoomPassword] = useState('');
 

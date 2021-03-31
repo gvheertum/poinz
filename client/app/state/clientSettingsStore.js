@@ -8,7 +8,7 @@ function setItem(key, value) {
   localStorage.setItem(POINZ_NAMESPACE + key, value);
 }
 
-export const getUserPresets = () => ({
+export const getUserPresets = () => ({  
   username: getPresetUsername(),
   userId: getPresetUserId(),
   avatar: getPresetAvatar(),

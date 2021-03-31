@@ -7,7 +7,6 @@ import {getPendingJoinCommandId} from '../../state/commandTracking/commandTracki
 import {getActionLog} from '../../state/actionLog/actionLogSelectors';
 import appConfig from '../../services/appConfig';
 import JoinRoomForm from './JoinRoomForm';
-import GithubRibbon from './GithubRibbon';
 
 import {
   StyledActionLog,
@@ -27,7 +26,6 @@ const Landing = ({waitingForJoin, actionLog}) => {
   if (waitingForJoin) {
     return (
       <StyledLanding>
-        <GithubRibbon />
         <StyledLandingInner>
           <Loader t={t} />
         </StyledLandingInner>
@@ -37,34 +35,9 @@ const Landing = ({waitingForJoin, actionLog}) => {
 
   return (
     <StyledLanding>
-      <GithubRibbon />
       <StyledLandingInner>
         <JoinRoomForm />
-
-        <StyledEyecatcher>
-          <StyledInfoText small={true}>
-            <i className="icon-attention"></i>
-            {t('disclaimer')}
-          </StyledInfoText>
-        </StyledEyecatcher>
-
-        {actionLog && actionLog.length > 0 && (
-          <StyledEyecatcher>
-            <StyledActionLog>
-              {actionLog.map((entry, index) => (
-                <li key={`logline_${index}`}>
-                  <span>{entry.tstamp}</span>
-                  <span>{entry.message}</span>
-                </li>
-              ))}
-            </StyledActionLog>
-          </StyledEyecatcher>
-        )}
-
-        <StyledEyecatcher>
-          <StyledChangelog dangerouslySetInnerHTML={{__html: appConfig.changeLog}} />
-        </StyledEyecatcher>
-      </StyledLandingInner>
+       </StyledLandingInner>
     </StyledLanding>
   );
 };

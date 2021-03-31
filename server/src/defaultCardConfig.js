@@ -1,5 +1,6 @@
 const defaultCardConfig = [
   {label: '?', value: -2, color: '#bdbfbf'},
+  {label: '☕', value: 0.1, color: '#667a66'},
   {label: '1/2', value: 0.5, color: '#667a66'},
   {label: '1', value: 1, color: '#839e7a'},
   {label: '2', value: 2, color: '#8cb876'},
@@ -7,10 +8,10 @@ const defaultCardConfig = [
   {label: '5', value: 5, color: '#b6c76b'},
   {label: '8', value: 8, color: '#c9c857'},
   {label: '13', value: 13, color: '#d9be3b'},
-  {label: '21', value: 21, color: '#d6cda1'},
-  {label: '34', value: 34, color: '#9fa6bd'},
-  {label: '55', value: 55, color: '#6a80ab'},
-  {label: 'BIG', value: -1, color: '#1d508f'}
+  {label: '20', value: 20, color: '#d6cda1'},
+  {label: '40', value: 40, color: '#9fa6bd'},
+  {label: '100', value: 100, color: '#6a80ab'},
+  {label: '😱', value: -1, color: '#1d508f'}
 ];
 
 export default defaultCardConfig;
