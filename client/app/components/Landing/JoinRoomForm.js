@@ -8,6 +8,7 @@ import {ROOM_ID_REGEX} from '../frontendInputValidation';
 import {getUsersPresets} from '../../state/users/usersSelectors';
 import PasswordField from '../common/PasswordField';
 import ValidatedInput from '../common/ValidatedInput';
+import Helpers from '../Helpers/Helpers'
 
 import {
   StyledEyecatcher,
@@ -26,7 +27,7 @@ import {
 const JoinRoomForm = ({presetUsername, joinRoom}) => {
   const {t} = useContext(L10nContext);
   const [showExtended, setShowExtended] = useState(true);
-  const [customRoomId, setCustomRoomId] = useState('');
+  const [customRoomId, setCustomRoomId] = useState(Helpers.generateName());
   const [customRoomPassword, setCustomRoomPassword] = useState('');
 
   return (
@@ -34,6 +35,7 @@ const JoinRoomForm = ({presetUsername, joinRoom}) => {
       <StyledInfoText>
         <i className="icon-users"></i>
         <div>
+          <img src="app/assets/OCC_Logo.png"/>
           {presetUsername && (
             <h5>
               {t('welcomeBack')}, {presetUsername}!
