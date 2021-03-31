@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import Helpers from './Helpers/Helpers'
 
 import Room from './Room/Room';
 import WhoAreYou from './Landing/WhoAreYou';

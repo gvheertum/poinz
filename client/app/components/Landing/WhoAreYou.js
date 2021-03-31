@@ -1,6 +1,7 @@
 import React, {useState, useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import Helpers from '../Helpers/Helpers';
 
 import {L10nContext} from '../../services/l10n';
 import {setUsername} from '../../state/actions/commandActions';
@@ -20,7 +21,7 @@ import {
  */
 const WhoAreYou = ({setUsername}) => {
   const {t} = useContext(L10nContext);
-  const [myUsername, setMyUsername] = useState('');
+  const [myUsername, setMyUsername] = useState(Helpers.generateName());
 
   return (
     <StyledLanding>
