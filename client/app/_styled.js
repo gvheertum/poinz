@@ -2,6 +2,7 @@ import {createGlobalStyle} from 'styled-components';
 
 import {COLOR_BLUE, COLOR_FONT_GREY, COLOR_LIGHTER_GREY, COLOR_ORANGE} from './components/colors';
 import zFontWoff from './assets/aazuotps_30.12.13-webfont.woff2';
+import occImage from './assets/OCC_Logo.png';
 
 import {StyledCardInner} from './components/EstimationArea/_styled';
 import {device} from './components/dimensions';
@@ -25,6 +26,12 @@ const Global = createGlobalStyle`
     left: 0;
     bottom: 0;
     right: 0;
+  }
+
+  div.occlogo {
+      width: 158px;
+      height: 73px;
+      background: url(${occImage}) no-repeat;
   }
 
   /* purecss form overrides */

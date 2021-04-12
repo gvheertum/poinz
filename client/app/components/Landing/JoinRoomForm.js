@@ -35,7 +35,7 @@ const JoinRoomForm = ({presetUsername, joinRoom}) => {
       <StyledInfoText>
         <i className="icon-users"></i>
         <div>
-          <img src="app/assets/OCC_Logo.png"/>
+          <div class="occlogo"/>
           {presetUsername && (
             <h5>
               {t('welcomeBack')}, {presetUsername}!
