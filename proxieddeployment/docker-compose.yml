@@ -1,0 +1,16 @@
+version: "2.0"
+services:
+  
+  poinzbackend:
+    image: heertum.azurecr.io/heertum/poinz-eurocom:latest
+    container_name: poinzbackend
+    ports: 
+        - "3000:3000"
+
+  nginx:
+    image: heertum.azurecr.io/heertum/poinz-nginx-eurocom:latest
+    container_name: nginx
+    hostname: poinz
+    domainname: poinz
+    ports:
+      - "80:80"
