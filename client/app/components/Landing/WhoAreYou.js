@@ -36,6 +36,7 @@ const WhoAreYou = ({setUsername}) => {
               autoFocus={true}
               data-testid="usernameInput"
               type="text"
+              autoComplete="name"
               placeholder={t('name')}
               value={myUsername}
               onChange={onUsernameChange}

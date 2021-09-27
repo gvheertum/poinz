@@ -1,5 +1,4 @@
 import {v4 as uuid} from 'uuid';
-import Promise from 'bluebird';
 
 // we want to test with our real command- and event handlers.
 import commandHandlers, {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';
@@ -137,14 +136,8 @@ export async function prepTwoUsersInOneRoomWithOneStoryAndEstimate(
   storyTitle,
   estimationValue = 8
 ) {
-  const {
-    userIdOne,
-    userIdTwo,
-    roomId,
-    storyId,
-    processor,
-    mockRoomsStore
-  } = await prepTwoUsersInOneRoomWithOneStory(username, storyTitle);
+  const {userIdOne, userIdTwo, roomId, storyId, processor, mockRoomsStore} =
+    await prepTwoUsersInOneRoomWithOneStory(username, storyTitle);
 
   await processor(
     {

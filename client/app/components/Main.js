@@ -40,7 +40,8 @@ Main.propTypes = {
   userCount: PropTypes.number,
   userId: PropTypes.string,
   presetUsername: PropTypes.string,
-  pathname: PropTypes.string
+  pathname: PropTypes.string,
+  authorizationFailed: PropTypes.bool
 };
 
 export default connect((state) => ({

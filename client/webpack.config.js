@@ -46,6 +46,12 @@ module.exports = {
         use: 'babel-loader'
       },
       {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false
+        }
+      },
+      {
         // load images: if filesize is lower than limit -> data-url (base64), plain url and packed file otherwise
         test: /\.(|png|jpg|gif)$/,
         use: {
@@ -56,62 +62,39 @@ module.exports = {
         }
       },
 
-      // now some font loaders (needed for zuehlke font and font-awesome icons)
+      // file loader for directly imported Zühlke font (in _styled.js).
+      // as of Aug2021 / css-loader 6.x does not use this loader -> no impact on fontello icon font "poinz"
       {
-        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        test: /aazuotps_30.12.13-webfont.woff2/, // <- matches the zühlke font
         use: {
-          loader: 'url-loader',
+          loader: 'file-loader',
           options: {
-            limit: 10000,
-            mimetype: 'application/font-woff'
+            name: '[path][name].[ext]'
           }
         }
-      },
-      {
-        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'application/font-woff'
-          }
-        }
-      },
-      {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'image/svg+xml'
-          }
-        }
-      },
-      {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'application/octet-stream'
-          }
-        }
-      },
-      {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        use: 'file-loader'
       }
     ]
   },
 
   plugins: [definePlugin],
 
+  resolve: {extensions: ['.wasm', '.mjs', '.js', '.jsx', '.json']},
+
   devServer: {
     // enables support for HTML5 urls ( http://host:port/context/ROOM instead of http://host:port/context/#ROOM)
     // during dev serving
     historyApiFallback: true,
 
-    publicPath: '/assets/',
+    static: {
+      directory: path.join(__dirname)
+    },
+    compress: true,
+    port: 9000,
+
+    devMiddleware: {
+      index: true,
+      publicPath: '/assets/'
+    },
 
     // proxy request to the rest api (our server does not send CORS headers intentionally)
     proxy: {

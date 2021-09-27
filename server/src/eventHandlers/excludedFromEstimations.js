@@ -1,10 +1,11 @@
-/**
- * Sets "excluded" flag on user to true
- */
 import {modifyUser} from './roomModifiers';
 
-const excludedFromEstimationsEventHandler = (room, eventPayload, userId) => {
-  return modifyUser(room, userId, (user) => ({
+/**
+ * Sets "excluded" flag on user to true.
+ * (user is now a "spectator")
+ */
+const excludedFromEstimationsEventHandler = (room, eventPayload) => {
+  return modifyUser(room, eventPayload.userId, (user) => ({
     ...user,
     excluded: true
   }));
