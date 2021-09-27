@@ -45,6 +45,7 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
           <ValidatedInput
             data-testid="usernameInput"
             type="text"
+            autoComplete="name"
             id="username"
             placeholder={t('name')}
             fieldValue={myUsername}
@@ -112,6 +113,7 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
             data-testid="gravatarEmailInput"
             type="text"
             id="email"
+            autoComplete="email"
             placeholder="Email..."
             fieldValue={myEmail}
             setFieldValue={setMyEmail}
@@ -130,11 +132,15 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
       </StyledSection>
 
       <StyledSection>
-        <h5>{t('markExcluded')}</h5>
-        {t('excludedInfo')}
+        <h5>{t('spectator')}</h5>
+        {t('spectatorInfo')}
 
-        <p onClick={toggleExcluded} className="clickable" data-testid="excludedToggle">
-          <i className={excluded ? 'icon-check' : 'icon-check-empty'}></i> {t('excluded')}
+        <p
+          onClick={() => toggleExcluded(user.id)}
+          className="clickable"
+          data-testid="excludedToggle"
+        >
+          <i className={excluded ? 'icon-check' : 'icon-check-empty'}></i> {t('markSpectator')}
         </p>
       </StyledSection>
     </StyledArea>

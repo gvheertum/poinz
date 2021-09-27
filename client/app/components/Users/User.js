@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useRef, useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -7,48 +7,68 @@ import {getMatchingCardConfig} from '../../state/room/roomSelectors';
 import {getOwnUserId} from '../../state/users/usersSelectors';
 import {L10nContext} from '../../services/l10n';
 import {getEstimationsForCurrentlySelectedStory} from '../../state/estimations/estimationsSelectors';
-import {kick} from '../../state/actions/commandActions';
+import {kick, toggleExcluded} from '../../state/actions/commandActions';
 import Avatar from '../common/Avatar';
 import UserEstimationCard from './UserEstimationCard';
+import useOutsideClick from '../common/useOutsideClick';
 
-import {StyledUser, StyledUserBadge, StyledUserKickOverlay, StyledUserName} from './_styled';
+import {
+  StyledUser,
+  StyledUserBadge,
+  StyledUserQuickMenu,
+  StyledUserName,
+  StyledEyeIcon
+} from './_styled';
 
-const User = ({user, selectedStory, userHasEstimation, ownUserId, matchingCardConfig, kick}) => {
+const User = ({
+  user,
+  selectedStory,
+  userHasEstimation,
+  ownUserId,
+  matchingCardConfig,
+  kick,
+  toggleExcluded
+}) => {
   const {t} = useContext(L10nContext);
+  const quickMenuRef = useRef(null);
+
   const isOwnUser = user.id === ownUserId;
   const isExcluded = user.excluded;
   const isDisconnected = user.disconnected;
   const revealed = selectedStory && selectedStory.revealed;
 
-  const [isMarkedForKick, setMarkForKick] = useState(false);
+  useOutsideClick(quickMenuRef, () => setQuickMenuShown(false));
+
+  const [quickMenuShown, setQuickMenuShown] = useState(false);
 
   return (
-    <StyledUser data-testid="user" isOwn={isOwnUser} shaded={isDisconnected || isMarkedForKick}>
-      {!isDisconnected && isExcluded && (
-        <StyledUserBadge>
-          <i className="icon-eye"></i>
-        </StyledUserBadge>
-      )}
-
-      {isDisconnected && (
-        <StyledUserBadge>
-          <i className="icon-flash"></i>
-        </StyledUserBadge>
-      )}
+    <StyledUser data-testid="user" isOwn={isOwnUser} shaded={isDisconnected || quickMenuShown}>
+      <StyledUserBadge>
+        {isExcluded && <i className="icon-eye"></i>}
+        {isDisconnected && <i className="icon-flash"></i>}
+      </StyledUserBadge>
 
       <Avatar
-        onClick={toggleMarkForKick}
+        onClick={() => setQuickMenuShown(true)}
         user={user}
         isOwn={user.id === ownUserId}
-        shaded={isDisconnected || isMarkedForKick}
+        shaded={isDisconnected || quickMenuShown}
       />
       <StyledUserName>{user.username || '-'}</StyledUserName>
 
-      {isMarkedForKick && (
-        <StyledUserKickOverlay>
-          <i className="icon-cancel" onClick={toggleMarkForKick} title={t('cancel')}></i>
-          <i className="icon-logout" onClick={() => kick(user.id)} title={t('kickUser')}></i>
-        </StyledUserKickOverlay>
+      {quickMenuShown && (
+        <StyledUserQuickMenu ref={quickMenuRef}>
+          <StyledEyeIcon
+            active={isExcluded}
+            className="icon-eye"
+            onClick={onEyeIconClick}
+            title={t('markSpectator')}
+          ></StyledEyeIcon>
+
+          {!isOwnUser && (
+            <i className="icon-logout" onClick={() => kick(user.id)} title={t('kickUser')}></i>
+          )}
+        </StyledUserQuickMenu>
       )}
 
       {selectedStory && (
@@ -62,11 +82,9 @@ const User = ({user, selectedStory, userHasEstimation, ownUserId, matchingCardCo
     </StyledUser>
   );
 
-  function toggleMarkForKick() {
-    if (isOwnUser) {
-      return; // no use in marking myself.. backend will prevent "kick" command for my own user anyways
-    }
-    setMarkForKick(!isMarkedForKick);
+  function onEyeIconClick() {
+    toggleExcluded(user.id);
+    setQuickMenuShown(false);
   }
 };
 
@@ -76,7 +94,8 @@ User.propTypes = {
   selectedStory: PropTypes.object,
   ownUserId: PropTypes.string,
   matchingCardConfig: PropTypes.object,
-  kick: PropTypes.func.isRequired
+  kick: PropTypes.func.isRequired,
+  toggleExcluded: PropTypes.func.isRequired
 };
 
 export default connect(
@@ -96,5 +115,5 @@ export default connect(
       selectedStory: isAStorySelected(state) ? getSelectedStory(state) : undefined
     };
   },
-  {kick}
+  {kick, toggleExcluded}
 )(User);

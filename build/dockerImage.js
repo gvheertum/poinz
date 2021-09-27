@@ -9,13 +9,13 @@
  *
  * */
 const path = require('path');
-const Promise = require('bluebird');
-const fs = Promise.promisifyAll(require('fs-extra'));
+const util = require('util');
+const fs = require('fs-extra');
 const {exec} = require('child_process');
 const {spawn} = require('cross-spawn');
 const del = require('del');
 
-const execPromised = Promise.promisify(exec);
+const execPromised = util.promisify(exec);
 
 const HEROKU_DEPLOYMENT_TAG = 'registry.heroku.com/poinz/web';
 
@@ -76,12 +76,12 @@ async function build() {
  * and pipes stdout and stderr to the node process.
  *
  * @param command
- * @param arguments
+ * @param args
  * @param options
  * @returns {Promise<T>} Returns a promise that will reject if childprocess does not exit with code 0.
  */
-function spawnAndPrint(command, arguments, options) {
-  const spawned = spawn(command, arguments, options);
+function spawnAndPrint(command, args, options) {
+  const spawned = spawn(command, args, options);
   spawned.stdout.pipe(process.stdout);
   spawned.stderr.pipe(process.stderr);
 
@@ -93,20 +93,29 @@ function spawnAndPrint(command, arguments, options) {
 }
 
 function startBuildingDockerImage(gitInfo) {
-  console.log(`building docker container for ${gitInfo.hash} on ${gitInfo.branch}`);
+  console.log(
+    `building docker container for ${gitInfo.hash} on branch ${
+      gitInfo.branch
+    } (git-tags: ${gitInfo.tags.join(' ')})`
+  );
 
-  const userAndProject = 'xeronimus/poinz';
-  const cmdArgs = `build -t ${userAndProject}:latest -t ${HEROKU_DEPLOYMENT_TAG} .`;
+  const user = process.env.DOCKER_USERNAME || 'xeronimus';
+  const userAndProject = `${user}/poinz`;
+  const tags = [`${userAndProject}:latest`, HEROKU_DEPLOYMENT_TAG];
+  gitInfo.tags.forEach((gitTag) => tags.push(`${userAndProject}:${gitTag}`));
+  const cmdArgs = `build ${tags.map((tg) => '-t ' + tg).join(' ')} .`;
 
   return spawnAndPrint('docker', cmdArgs.split(' '), {cwd: path.resolve(__dirname, '..')});
 }
 
 function getGitInformation() {
   return Promise.all([
-    execPromised('git rev-parse --abbrev-ref HEAD', {cwd: __dirname}),
-    execPromised('git rev-parse --short HEAD', {cwd: __dirname})
-  ]).spread((abbrev, short) => ({
-    branch: abbrev.split('\n').join(''),
-    hash: short.split('\n').join('')
+    execPromised('git rev-parse --abbrev-ref HEAD', {cwd: __dirname}), // This will return `HEAD` if in detached mode
+    execPromised('git rev-parse --short HEAD', {cwd: __dirname}),
+    execPromised('git tag --points-at HEAD', {cwd: __dirname})
+  ]).then(([abbrev, short, tags]) => ({
+    branch: process.env.TRAVIS_BRANCH || abbrev.stdout.split('\n').join(''),
+    hash: short.stdout.split('\n').join(''),
+    tags: tags.stdout.split('\n').filter((n) => n)
   }));
 }

@@ -212,10 +212,10 @@ export const setAvatar = (avatar) => (dispatch, getState, sendCommand) => {
   });
 };
 
-export const toggleExcluded = () => (dispatch, getState, sendCommand) => {
+export const toggleExcluded = (userId) => (dispatch, getState, sendCommand) => {
   sendCommand({
     name: 'toggleExclude',
-    payload: {}
+    payload: {userId}
   });
 };
 
@@ -273,14 +273,16 @@ export const deleteStory = (storyId) => (dispatch, getState, sendCommand) => {
   });
 };
 
-export const setCardConfig = (cardConfig) => (dispatch, getState, sendCommand) => {
-  sendCommand({
-    name: 'setCardConfig',
-    payload: {
-      cardConfig
-    }
-  });
-};
+export const setCardConfig =
+  (cardConfig = []) =>
+  (dispatch, getState, sendCommand) => {
+    sendCommand({
+      name: 'setCardConfig',
+      payload: {
+        cardConfig
+      }
+    });
+  };
 
 export const setPassword = (password) => (dispatch, getState, sendCommand) => {
   sendCommand({

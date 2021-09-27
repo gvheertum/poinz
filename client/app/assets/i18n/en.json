@@ -30,10 +30,10 @@
   "toggleMenu": "Settings",
   "customRoomName": "Custom Room Name",
   "welcomeBack": "Welcome back",
-  "disclaimer": "Use Poinz at your own risk! Be aware that all information that you enter is publicly available!",
-  "markExcluded": "Mark as excluded",
-  "excludedInfo": "Excluded users cannot participate in estimations. They still can add and modify stories.",
-  "excluded": "Excluded from estimations",
+  "disclaimer": "Use Poinz at your own risk! Be aware that all information that you enter is potentially publicly available!",
+  "markSpectator": "Mark as spectator",
+  "spectatorInfo": "Spectators cannot participate in estimations. They still can add and modify stories.",
+  "spectator": "Spectator",
   "autoReveal": "Reveal stories automatically",
   "autoRevealInfo": "Stories are automatically revealed when all users estimated.",
   "toggleAutoReveal": "Auto Reveal",
@@ -53,6 +53,7 @@
   "customCards": "Custom Cards",
   "customCardsInfo": "Use a custom set of estimation cards. If the room contains already estimated stories, you might get unexpected results...",
   "iKnowWhatImDoin": "I know what I'm doing...",
+  "default": "Default",
   "customCardsJsonError": "Sorry, we cannot parse the input to JSON!",
   "customCardsDuplicateError": "Make sure that you have unique values!",
   "help": "Help",
@@ -76,6 +77,7 @@
   "usersEstimated": "%{count} of %{total} Users estimated",
   "settle": "Settle the estimation on \"%{label}\"",
   "settledOn": "Manually settled on \"%{label}\"",
-  "numericalAverage": "Numerical average is %{value}"
+  "numericalAverage": "Numerical average is %{value}",
+  "recommendation": "Recommendation"
 
 }
