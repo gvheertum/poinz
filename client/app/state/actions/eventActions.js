@@ -38,6 +38,8 @@ export const EVENT_ACTION_TYPES = {
   cardConfigSet: 'CARD_CONFIG_SET',
   autoRevealOn: 'AUTO_REVEAL_ON',
   autoRevealOff: 'AUTO_REVEAL_OFF',
+  confidenceOn: 'CONFIDENCE_ON',
+  confidenceOff: 'CONFIDENCE_OFF',
   passwordSet: 'PASSWORD_SET',
   passwordCleared: 'PASSWORD_CLEARED',
   tokenIssued: 'TOKEN_ISSUED'
@@ -47,8 +49,7 @@ export const EVENT_ACTION_TYPES = {
 
 /**
  * Our client received an event over the websocket, which is now transformed into two redux actions.
- * One generic "EVENT_RECEIVED" action and one specific action, if the event is known (i.e. there exists a matching property on EVENT_ACTION_TYPES).
- * The type of the specific redux action will match the name of the event.
+ * One generic "EVENT_RECEIVED" action and one specific action. The type of the specific redux action will match the name of the event.
  *
  * @param {object} event
  */

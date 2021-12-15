@@ -1,8 +1,10 @@
 /**
  * A user gives his estimation for a certain story.
  * Users may only give estimations for the currently selected story.
+ * Users can optionally specify "confidence". if the value is above zero -> I'm confident.  if the value is below zero -> I'm unsure!.  If property is not provided, or 0 -> default.
+ *
  * A user that is marked as excluded (see toggleExclude/excludedFromEstimations)  cannot give estimations
- * As soon as all users (that can estimate) estimated the story, a "revealed" event is produced
+ * As soon as all users (that can estimate) estimated the story, a "revealed" event is produced (by default, if room setting is not altered. see "autoReveal")
  */
 import {getMatchingStoryOrThrow, getMatchingUserOrThrow} from './commonPreconditions';
 
@@ -22,6 +24,9 @@ const schema = {
             },
             value: {
               type: 'number'
+            },
+            confidence: {
+              type: 'number' /* optional payload property */
             }
           },
           required: ['storyId', 'value'],
@@ -51,11 +56,11 @@ const giveStoryEstimateCommandHandler = {
       throw new Error('Users that are excluded from estimations cannot give estimations!');
     }
   },
-  fn: (room, command, userId) => {
+  fn: (pushEvent, room, command, userId) => {
     // currently estimation value is also sent to clients (hidden there)
     // user could "sniff" network traffic and see estimations of colleagues...
     // this could be improved in the future.. (e.g. not send value with "storyEstimateGiven" -> but send all values later with "revealed" )
-    room.applyEvent('storyEstimateGiven', command.payload);
+    pushEvent('storyEstimateGiven', command.payload);
 
     if (!room.autoReveal) {
       // if room has autoReveal disabled, we can stop here
@@ -64,13 +69,13 @@ const giveStoryEstimateCommandHandler = {
 
     const matchingStory = getMatchingStoryOrThrow(room, command.payload.storyId);
     if (allValidUsersEstimated(room, matchingStory, userId)) {
-      room.applyEvent('revealed', {
+      pushEvent('revealed', {
         storyId: command.payload.storyId,
         manually: false
       });
 
       if (allEstimationsSame(matchingStory, userId, command.payload.value)) {
-        room.applyEvent('consensusAchieved', {
+        pushEvent('consensusAchieved', {
           storyId: command.payload.storyId,
           value: command.payload.value
         });

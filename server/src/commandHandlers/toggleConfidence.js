@@ -20,15 +20,15 @@ const schema = {
   ]
 };
 
-const toggleAutoRevealCommandHandler = {
+const toggleConfidenceCommandHandler = {
   schema,
   fn: (pushEvent, room) => {
-    if (room.autoReveal) {
-      pushEvent('autoRevealOff', {});
+    if (room.withConfidence) {
+      pushEvent('confidenceOff', {});
     } else {
-      pushEvent('autoRevealOn', {});
+      pushEvent('confidenceOn', {});
     }
   }
 };
 
-export default toggleAutoRevealCommandHandler;
+export default toggleConfidenceCommandHandler;
