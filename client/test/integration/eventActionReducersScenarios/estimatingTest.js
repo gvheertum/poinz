@@ -25,14 +25,14 @@ test('Estimation with two users', () => {
   const joinedEvtOne = scenario.events[1];
   const joinedEvtTwo = scenario.events[5];
 
-  const addedEvtOne = scenario.events[9];
+  const addedEvtOne = scenario.events[10];
   const storyIdOne = addedEvtOne.payload.storyId;
-  const addedEvtTwo = scenario.events[10];
+  const addedEvtTwo = scenario.events[11];
   const storyIdTwo = addedEvtTwo.payload.storyId;
 
   modifiedState = reduceMultipleEvents(
     getScenarioStartingState(joinedEvtOne.correlationId),
-    scenario.getNextEvents(13) // up until first story estimate given
+    scenario.getNextEvents(14) // up until first story estimate given
   );
 
   expect(getStoriesById(modifiedState)[storyIdOne]).toEqual({
@@ -50,7 +50,7 @@ test('Estimation with two users', () => {
 
   expect(getEstimations(modifiedState)).toEqual({
     [storyIdOne]: {
-      [joinedEvtOne.userId]: 3
+      [joinedEvtOne.userId]: {value: 3, confidence: 0}
     }
   });
 
@@ -64,8 +64,8 @@ test('Estimation with two users', () => {
   modifiedState = reduceMultipleEvents(modifiedState, scenario.getNextEvents(2)); // both did estimate
   expect(getEstimations(modifiedState)).toEqual({
     [storyIdOne]: {
-      [joinedEvtOne.userId]: 5,
-      [joinedEvtTwo.userId]: 5
+      [joinedEvtOne.userId]: {value: 5, confidence: 0},
+      [joinedEvtTwo.userId]: {value: 5, confidence: 1}
     }
   });
 
