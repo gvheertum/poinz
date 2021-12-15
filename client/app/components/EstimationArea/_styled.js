@@ -47,6 +47,8 @@ export const StyledStoryText = styled.div`
 
 export const StyledApplauseHighlight = styled.div`
   position: absolute;
+  user-select: none;
+  pointer-events: none;
   top: 0;
   left: 0;
   width: 100%;
@@ -60,6 +62,7 @@ export const StyledApplauseHighlight = styled.div`
 `;
 
 export const StyledSelectedStory = styled.div`
+  position: relative;
   background: #fff;
   border: 1px solid #e8e8e8;
   padding: 8px;
@@ -67,12 +70,33 @@ export const StyledSelectedStory = styled.div`
 `;
 
 export const StyledConfidenceButtons = styled.div`
-  margin-top: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  @media ${device.desktop} {
+    display: block;
+  }
+`;
+
+export const StyledConfButton = styled.button`
+  font-size: small;
+  box-shadow: ${({active}) => (active ? 'inset 1px 2px 12px -4px #424242' : 'inherit')};
+  background: ${({active}) => (active ? ' #afaeae' : '#e6e6e6')};
 `;
 
 export const StyledCards = styled.div`
+  margin-top: 16px;
+`;
+
+export const StyledCardsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+
+  @media ${device.desktop} {
+    justify-content: flex-start;
+  }
 `;
 
 export const StyledCard = styled.button`
