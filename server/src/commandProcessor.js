@@ -1,7 +1,7 @@
 import util from 'util';
-import {v4 as uuid} from 'uuid';
 import fastq from 'fastq';
 
+import uuid from './uuid';
 import getLogger from './getLogger';
 import {throwIfUserIdNotFoundInRoom} from './commandHandlers/commonPreconditions';
 import {
@@ -186,6 +186,8 @@ export default function commandProcessorFactory(
   async function preConditions(ctx, cmd) {
     try {
       if (!ctx.handler.skipUserIdRoomCheck) {
+        // this check is important. only after a user joined a room, he can issue commands against that room.
+        // for password protected rooms, the token is only validated on joinRoom command - not on all subsequent commands
         throwIfUserIdNotFoundInRoom(ctx.room, ctx.userId);
       }
 

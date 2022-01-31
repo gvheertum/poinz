@@ -1,7 +1,6 @@
-import {v4 as uuid} from 'uuid';
-
 import {findNextStoryIdToEstimate} from '../estimations/estimationsSelectors';
 import appConfig from '../../services/appConfig';
+import uuid from '../../services/uuid';
 import history from '../getBrowserHistory';
 import {getOwnUserId, getOwnUserToken, getUsersPresets} from '../users/usersSelectors';
 import {getSelectedStoryId} from '../stories/storiesSelectors';
@@ -220,19 +219,45 @@ export const toggleExcluded = (userId) => (dispatch, getState, sendCommand) => {
   });
 };
 
-export const toggleAutoReveal = () => (dispatch, getState, sendCommand) => {
+/* these three properties are set with "setRoomConfig" command */
+
+export const setRoomConfigToggleAutoReveal = () => (dispatch, getState, sendCommand) => {
+  const {room} = getState();
   sendCommand({
-    name: 'toggleAutoReveal',
-    payload: {}
+    name: 'setRoomConfig',
+    payload: {
+      autoReveal: !room.autoReveal,
+      withConfidence: room.withConfidence,
+      issueTrackingUrl: room.issueTrackingUrl
+    }
   });
 };
 
-export const toggleConfidence = () => (dispatch, getState, sendCommand) => {
+export const setRoomConfigToggleConfidence = () => (dispatch, getState, sendCommand) => {
+  const {room} = getState();
   sendCommand({
-    name: 'toggleConfidence',
-    payload: {}
+    name: 'setRoomConfig',
+    payload: {
+      autoReveal: room.autoReveal,
+      withConfidence: !room.withConfidence,
+      issueTrackingUrl: room.issueTrackingUrl
+    }
   });
 };
+
+export const setRoomConfigIssueTrackingUrl =
+  (url = []) =>
+  (dispatch, getState, sendCommand) => {
+    const {room} = getState();
+    sendCommand({
+      name: 'setRoomConfig',
+      payload: {
+        autoReveal: room.autoReveal,
+        withConfidence: room.withConfidence,
+        issueTrackingUrl: url
+      }
+    });
+  };
 
 export const kick = (userId) => (dispatch, getState, sendCommand) => {
   sendCommand({
@@ -252,6 +277,17 @@ export const changeStory = (storyId, title, description) => (dispatch, getState,
       description
     }
   });
+};
+
+export const trashStories = (storyIds) => (dispatch, getState, sendCommand) => {
+  storyIds.forEach((id) =>
+    sendCommand({
+      name: 'trashStory',
+      payload: {
+        storyId: id
+      }
+    })
+  );
 };
 
 export const trashStory = (storyId) => (dispatch, getState, sendCommand) => {

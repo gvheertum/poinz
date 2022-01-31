@@ -1,7 +1,7 @@
-import {v4 as uuid} from 'uuid';
 import path from 'path';
 import {promises as fs, constants as fsConst} from 'fs';
 
+import uuid from '../../src/uuid';
 import poinzSocketClientFactory from './poinzSocketClient';
 
 const clientEventActionReducerScenarioDir = path.resolve(
@@ -15,7 +15,7 @@ const clientEventActionReducerScenarioDir = path.resolve(
  *
  *  This needs a running Poinz backend on localhost:3000
  *
- *  This writes json files to the client directory (if there are changes in the produced events apart from the ever-changing uuids)!
+ *  This writes json files to the client directory (if there are changes in the produced events apart from the ever-changing uids (uuidv4 or nanoid))!
  *
  *  See /docu/technicalDocu.md for further information
  */
@@ -108,7 +108,12 @@ test('estimatingTest: Adding Stories, estimate them', async () => {
   await client.cmdAndWait(client.cmds.setUsername(roomId, secondUserId, 'John'));
 
   // activate confidence levels on this room
-  await client.cmdAndWait(client.cmds.toggleConfidence(roomId, firstUserId));
+  await client.cmdAndWait(
+    client.cmds.setRoomConfig(roomId, firstUserId, {
+      autoReveal: true /*default*/,
+      withConfidence: true
+    })
+  );
 
   // first user adds two stories
   const [storyAddedOne] = await client.cmdAndWait(
@@ -218,7 +223,7 @@ test('joinAndLeave ', async () => {
   await dumpEventsToFile(clientA.getAllReceivedEvents(), outputFilename);
   clientA.disconnect();
   clientB.disconnect();
-});
+}, 300000);
 
 test('joinAndLeaveWithPassword ', async () => {
   const outputFilename = 'roomJoiningAndLeavingWithPasswordTest.json';
@@ -293,8 +298,8 @@ test('includeAndExcludeTest: two users, one excludes and includes himself. Then 
   client.disconnect();
 });
 
-test('roomSettingsTest:  user configures room (cardConfig and autoReveal)', async () => {
-  const outputFilename = 'roomSettingsTest.json';
+test('roomConfigTest:  user configures room (cardConfig and autoReveal/confidence/issueTrackingUrl)', async () => {
+  const outputFilename = 'roomConfigTest.json';
 
   const client = poinzSocketClientFactory();
 
@@ -311,8 +316,20 @@ test('roomSettingsTest:  user configures room (cardConfig and autoReveal)', asyn
     ])
   );
 
-  await client.cmdAndWait(client.cmds.toggleAutoReveal(roomId, firstUserId));
-  await client.cmdAndWait(client.cmds.toggleAutoReveal(roomId, firstUserId));
+  await client.cmdAndWait(
+    client.cmds.setRoomConfig(roomId, firstUserId, {
+      autoReveal: false,
+      withConfidence: true,
+      issueTrackingUrl: 'https://some.url.com'
+    })
+  );
+  await client.cmdAndWait(
+    client.cmds.setRoomConfig(roomId, firstUserId, {
+      autoReveal: true,
+      withConfidence: false,
+      issueTrackingUrl: ''
+    })
+  );
 
   // in the end, write to file and close socket
   await dumpEventsToFile(client.getAllReceivedEvents(), outputFilename);
@@ -339,6 +356,10 @@ async function dumpEventsToFile(events, outputFilename) {
       JSON.stringify(resetIdAndTokenProperties(events))
     ) {
       await fs.writeFile(outputFullPath, JSON.stringify(events), 'utf-8');
+
+      // for debugging purposes, if you wonder why the event files get written:
+      // await fs.writeFile(outputFullPath + '_PREV', JSON.stringify(resetIdAndTokenProperties(previousEvents), null, 4), 'utf-8');
+      // await fs.writeFile(outputFullPath + '_NEW', JSON.stringify(resetIdAndTokenProperties(events), null, 4), 'utf-8');
     }
   }
 }
@@ -358,7 +379,16 @@ function resetIdAndTokenProperties(object) {
   } else if (typeof object === 'object') {
     return Object.keys(object).reduce((newObj, k) => {
       if (
-        ['id', 'roomId', 'correlationId', 'userId', 'selectedStory', 'storyId', 'token'].includes(k)
+        [
+          'id',
+          'roomId',
+          'correlationId',
+          'userId',
+          'selectedStory',
+          'storyId',
+          'token',
+          'createdAt'
+        ].includes(k)
       ) {
         newObj[k] = '-1';
       } else {

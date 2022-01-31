@@ -37,14 +37,6 @@ const FlashAnimation = keyframes`
   }
 `;
 
-export const StyledStoryText = styled.div`
-  margin-top: 4px;
-  white-space: pre-wrap;
-  display: inline-block;
-  overflow-x: auto;
-  width: 100%;
-`;
-
 export const StyledApplauseHighlight = styled.div`
   position: absolute;
   user-select: none;
@@ -67,22 +59,6 @@ export const StyledSelectedStory = styled.div`
   border: 1px solid #e8e8e8;
   padding: 8px;
   position: relative;
-`;
-
-export const StyledConfidenceButtons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-
-  @media ${device.desktop} {
-    display: block;
-  }
-`;
-
-export const StyledConfButton = styled.button`
-  font-size: small;
-  box-shadow: ${({active}) => (active ? 'inset 1px 2px 12px -4px #424242' : 'inherit')};
-  background: ${({active}) => (active ? ' #afaeae' : '#e6e6e6')};
 `;
 
 export const StyledCards = styled.div`

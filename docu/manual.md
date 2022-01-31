@@ -79,7 +79,11 @@ marked with a **orange bar** on the left.
 ### Adding stories
 
 Simply fill in the form on the top left. The *Title* is mandatory, the *Description* is optional. Any url in the
-description will be rendered as clickable link.
+description will be rendered as a clickable link.
+
+You can also use markdown syntax in the story description. You can toggle between markdown and plaintext on the bottom right of the story description:
+
+![Markdown support](https://user-images.githubusercontent.com/1777143/151653695-a5367261-a31c-4a21-871a-fcb93b0a30de.png)
 
 ### Importing stories
 
@@ -94,7 +98,11 @@ ISS-123,The Title, some Description
 ISS-554,Another Story, With a description
 ```
 
-PoinZ uses [papaparse](https://www.papaparse.com/) to parse the given csv file.
+PoinZ will also parse a default **Jira** issue export, where column headers are named: "Issue Key", "Summary", "Description".
+
+( PoinZ uses [papaparse](https://www.papaparse.com/) to parse the given csv file.)
+
+Note: If you want to link to your Issue Tracking System, check out [Issue Tracking URL](#issue-tracking-url).
 
 ### Editing stories
 
@@ -158,7 +166,7 @@ estimate. PoinZ then displays all given estimates for this story (visible for al
 You can enable the "Confidence" setting in your room to allow your colleagues to specify a confidence when estimating a
 story.
 
-If the feature is enabled, users will be able to select "Unsuer" /  "Default" / "Very sure" when estimating a story:
+If the feature is enabled, users will be able to select "Unsure" /  "Default" / "Very sure" when estimating a story:
 
 ![estimating_with_confidence](https://user-images.githubusercontent.com/1777143/135747987-de44939e-d90f-4ea4-8c05-f5820e3bbbbd.png)
 
@@ -166,6 +174,18 @@ After the story is revealed, the played cards are marked accordingly. In this ex
 user ChromeU was very unsure about the story being "2", whereas Foxy was very sure, this story is "13"!
 
 ![estimating_with_confidence_revealed](https://user-images.githubusercontent.com/1777143/135748049-3be28220-17f6-490a-a80e-838d7390d67e.png)
+
+
+### Estimation Matrix
+
+The Estimation Matrix displays a table with all estimated stories (all stories with consensus), ordered by estimation value. 
+This allows you and your team members to estimate the current story in relation to other stories which improves your estimation results.
+
+You can toggle between the Matrix and the Story via the small toggle bottom on the right, just below the users. 
+
+<img src="https://user-images.githubusercontent.com/1777143/151691920-496244fa-6395-4c8a-bc59-61c84d7cca5e.png" width="300" />
+
+
 
 ## Settings
 
@@ -192,7 +212,7 @@ moderators.
 
 These settings will affect the room and thus all users in the same room.
 
-<img src="https://user-images.githubusercontent.com/1777143/98459633-fbea8e80-219c-11eb-863b-c27d9a6b8f87.png" width="150" />
+<img src="https://user-images.githubusercontent.com/1777143/150672684-d3eed4d0-c362-425f-a891-5cc45bab07be.png" width="300" />
 
 #### Auto Reveal
 
@@ -219,7 +239,7 @@ For an existing room without password protection, the room settings allow you to
 override an existing password. If you click the save button with an empty password field, you remove the password
 protection of that room.
 
-<img src="https://user-images.githubusercontent.com/1777143/105578826-379bfa00-5d83-11eb-9a34-6fea1abcd9d3.png" width="300" />
+<img src="https://user-images.githubusercontent.com/1777143/105578826-379bfa00-5d83-11eb-9a34-6fea1abcd9d3.png" width="250" />
 
 #### Confidence
 
@@ -228,7 +248,7 @@ story. See [Estimating with "Confidence Levels"](#estimating-with-confidence-lev
 
 #### Custom Cards
 
-<img src="https://user-images.githubusercontent.com/1777143/98459768-238e2680-219e-11eb-9c05-c8d734fe2c81.png" width="150" />
+<img src="https://user-images.githubusercontent.com/1777143/98459768-238e2680-219e-11eb-9c05-c8d734fe2c81.png" width="250" />
 
 If the default set of cards does not meet your needs, you can change it.
 
@@ -239,6 +259,16 @@ If the default set of cards does not meet your needs, you can change it.
 You can also use the text editor and edit the json array directly.
 
 If you click on "Default", you immediately restore the default card configuration.
+
+#### Issue Tracking URL
+
+<img src="https://user-images.githubusercontent.com/1777143/150672743-742c01e2-7b1b-4fb7-9ba4-3321901ead76.png" width="250" />
+
+If you want to link your imported stories to your Issue Tracking (e.g. Jira), you can set a URL here. E.g. *https://my.jira.com/browse/{ISSUE}*.
+The placeholder {ISSUE} will be replaced with the issue key.
+
+If you [import stories](#importing-stories) (via csv) PoinZ will add a deeplink to the respective issue description. 
+
 
 ## Security
 

@@ -1,5 +1,4 @@
-import {v4 as uuid} from 'uuid';
-
+import uuid from '../../src/uuid';
 import persistentRoomsStore from '../../src/store/persistentRoomsStore';
 
 const LOCAL_MONGODB_CONNECTION_URI = 'mongodb://localhost:27017';
@@ -156,6 +155,36 @@ describe('housekeeping', () => {
     await persistentRoomsStore.housekeeping();
 
     retrievedRoom = await persistentRoomsStore.getRoomById(newerRoomObject.id);
+    expect(retrievedRoom).toBeUndefined();
+  });
+
+  test('should mark rooms with lastActivity *just greater than threshold* for deletion ', async () => {
+    // as of january 2022, the threshold is new 61 days
+    const tStampThirtyOneDaysAgo = Date.now() - 61 * 24 * 60 * 60 * 1000 - 100; /* 100 ms margin */
+
+    const oldRoomObject = {
+      id: uuid(),
+      users: {},
+      description: 'test room, ancient',
+      created: 0,
+      lastActivity: tStampThirtyOneDaysAgo
+    };
+
+    await persistentRoomsStore.saveRoom(oldRoomObject);
+
+    const houseKeepingReport = await persistentRoomsStore.housekeeping();
+    expect(houseKeepingReport.markedForDeletion.length).toBe(1);
+    expect(houseKeepingReport.markedForDeletion[0]).toEqual(oldRoomObject.id);
+    expect(houseKeepingReport.deleted.length).toBe(0);
+
+    // we can still fetch it, is marked for deletion
+    let retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.id);
+    expect(retrievedRoom).toBeDefined();
+    expect(retrievedRoom.markedForDeletion).toBe(true);
+
+    // on the second housekeeping, room is removed
+    await persistentRoomsStore.housekeeping();
+    retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.id);
     expect(retrievedRoom).toBeUndefined();
   });
 
